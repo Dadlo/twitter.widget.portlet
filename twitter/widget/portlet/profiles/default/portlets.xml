@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<portlets>
+
+ <!-- Portlet type registrations -->
+
+ <portlet
+   addview="twitter.widget.portlet.twitterWidgetPortlet"
+   title="Twitter Widget Portlet"
+   description="Twitter Widget Based Portlet"
+   />
+
+</portlets>

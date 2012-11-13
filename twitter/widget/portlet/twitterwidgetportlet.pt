@@ -1,0 +1,26 @@
+<dl class="portlet portlettwitterWidgetPortlet"
+    i18n:domain="twitter.widget.portlet">
+
+<!--
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        Header
+        <span class="portletTopRight"></span>
+    </dt>
+-->
+
+    <dd class="portletItem odd" tal:define="portletSearchType view/getType">
+        <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
+        <script tal:content="view/getScriptSearch" tal:condition="portletSearchType"></script>
+        <script tal:content="view/getScriptProfile" tal:condition="not: portletSearchType"></script>
+    </dd>
+
+<!--
+    <dd class="portletFooter">
+        <span class="portletBottomLeft"></span>
+        Footer
+        <span class="portletBottomRight"></span>
+    </dd>
+-->
+
+</dl>
