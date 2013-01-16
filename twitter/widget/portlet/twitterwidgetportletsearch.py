@@ -11,7 +11,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from twitter.widget.portlet import twitterWidgetPortletMessageFactory as _
 
 
-class ItwitterWidgetPortlet(IPortletDataProvider):
+class ItwitterWidgetPortletSearch(IPortletDataProvider):
     """A portlet
 
     It inherits from IPortletDataProvider because for this portlet, the
@@ -19,8 +19,14 @@ class ItwitterWidgetPortlet(IPortletDataProvider):
     same.
     """
 
-    profile = schema.TextLine(title=_(u"Profile to be Searched"),
-                                  description=_(u"Profile to be Searched"),
+    tptitle = schema.TextLine(title=_(u"Title"),
+                                  description=_(u"Title of the portlet"),
+                                  required=False)
+    tpsubtitle = schema.TextLine(title=_(u"Subtitle"),
+                                  description=_(u"Subtitle of the portlet"),
+                                  required=False)
+    tpsearch = schema.TextLine(title=_(u"Name, profile or hashtag to be searched"),
+                                  description=_(u"Name, profile or hashtag to be searched"),
                                   required=False)
     tpinterval = schema.Int(title=_(u"Interval of Tweets"),
                                   description=_(u"Interval of Tweets to be loaded"),
@@ -62,8 +68,11 @@ class Assignment(base.Assignment):
     with columns.
     """
 
-    implements(ItwitterWidgetPortlet)
+    implements(ItwitterWidgetPortletSearch)
 
+    tptitle = ""
+    tpsubtitle = ""
+    tpsearch = ""
     tpinterval = 30000
     tpwidth = 250
     tpheight = 300
@@ -72,9 +81,11 @@ class Assignment(base.Assignment):
     tweetsbackground = "#ffffff"
     tweetsfontcolor = "#3d3d3d"
     tweetslinkscolor = "#0c59cc"
-    profile = ""
 
-    def __init__(self, tpinterval=30000, tpwidth=250, tpheight=300, shellbackground="#feb200", shellfontcolor="#262626", tweetsbackground="#ffffff", tweetsfontcolor="#3d3d3d", tweetslinkscolor="#0c59cc", profile="", **kwargs):
+    def __init__(self, tptitle="", tpsubtitle="",tpsearch="", tpinterval=30000, tpwidth=250, tpheight=300, shellbackground="#feb200", shellfontcolor="#262626", tweetsbackground="#ffffff", tweetsfontcolor="#3d3d3d", tweetslinkscolor="#0c59cc", **kwargs):
+        self.tptitle = tptitle
+        self.tpsubtitle = tpsubtitle
+        self.tpsearch = tpsearch
         self.tpinterval = tpinterval
         self.tpwidth = tpwidth
         self.tpheight = tpheight
@@ -83,14 +94,13 @@ class Assignment(base.Assignment):
         self.tweetsbackground = tweetsbackground
         self.tweetsfontcolor = tweetsfontcolor
         self.tweetslinkscolor = tweetslinkscolor
-        self.profile = profile
 
     @property
     def title(self):
         """This property is used to give the title of the portlet in the
         "manage portlets" screen.
         """
-        return "Twitter Widget Portlet Profile"
+        return "Twitter Widget Portlet Search"
 
 
 class Renderer(base.Renderer):
@@ -101,16 +111,18 @@ class Renderer(base.Renderer):
     of this class. Other methods can be added and referenced in the template.
     """
 
-    render = ViewPageTemplateFile('twitterwidgetportlet.pt')
+    render = ViewPageTemplateFile('twitterwidgetportletsearch.pt')
 
-    def getScriptProfile(self):
+    def getScriptSearch(self):
         """ Returns script for the Twitter Portlet
         """
-        scriptProfileTwitter="""new TWTR.Widget({
+        scriptSearchTwitter="""new TWTR.Widget({
   version: 2,
-  type: 'profile',
-  rpp: 4,
+  type: 'search',
+  search: '%s',
   interval: %i,
+  title: '%s',
+  subject: '%s',
   width: %i,
   height: %i,
   theme: {
@@ -126,13 +138,13 @@ class Renderer(base.Renderer):
   },
   features: {
     scrollbar: false,
-    loop: false,
-    live: false,
-    behavior: 'all'
+    loop: true,
+    live: true,
+    behavior: 'default'
   }
-}).render().setUser('%s').start();
-        """%(self.data.tpinterval,self.data.tpwidth,self.data.tpheight,self.data.shellbackground, self.data.shellfontcolor,self.data.tweetsbackground,self.data.tweetsfontcolor,self.data.tweetslinkscolor,self.data.profile)
-        return scriptProfileTwitter
+}).render().start();
+        """%(self.data.tpsearch,self.data.tpinterval,self.data.tptitle,self.data.tpsubtitle,self.data.tpwidth,self.data.tpheight,self.data.shellbackground, self.data.shellfontcolor,self.data.tweetsbackground,self.data.tweetsfontcolor,self.data.tweetslinkscolor)
+        return scriptSearchTwitter
 
 class AddForm(base.AddForm):
     """Portlet add form.
@@ -141,10 +153,26 @@ class AddForm(base.AddForm):
     zope.formlib which fields to display. The create() method actually
     constructs the assignment that is being added.
     """
-    form_fields = form.Fields(ItwitterWidgetPortlet)
+    form_fields = form.Fields(ItwitterWidgetPortletSearch)
 
     def create(self, data):
         return Assignment(**data)
+
+
+# NOTE: If this portlet does not have any configurable parameters, you
+# can use the next AddForm implementation instead of the previous.
+
+# class AddForm(base.NullAddForm):
+#     """Portlet add form.
+#     """
+#     def create(self):
+#         return Assignment()
+
+
+# NOTE: If this portlet does not have any configurable parameters, you
+# can remove the EditForm class definition and delete the editview
+# attribute from the <plone:portlet /> registration in configure.zcml
+
 
 class EditForm(base.EditForm):
     """Portlet edit form.
@@ -152,4 +180,4 @@ class EditForm(base.EditForm):
     This is registered with configure.zcml. The form_fields variable tells
     zope.formlib which fields to display.
     """
-    form_fields = form.Fields(ItwitterWidgetPortlet)
+    form_fields = form.Fields(ItwitterWidgetPortletSearch)

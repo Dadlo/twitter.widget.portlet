@@ -23,6 +23,18 @@
        -->
 
      <plone:portlet
+         name="twitter.widget.portlet.twitterWidgetPortletSearch"
+         interface=".twitterwidgetportletsearch.ItwitterWidgetPortletSearch"
+         assignment=".twitterwidgetportletsearch.Assignment"
+         view_permission="zope2.View"
+         edit_permission="cmf.ManagePortal"
+         renderer=".twitterwidgetportletsearch.Renderer"
+         addview=".twitterwidgetportletsearch.AddForm"
+         editview=".twitterwidgetportletsearch.EditForm"
+         />
+
+
+     <plone:portlet
          name="twitter.widget.portlet.twitterWidgetPortlet"
          interface=".twitterwidgetportlet.ItwitterWidgetPortlet"
          assignment=".twitterwidgetportlet.Assignment"

@@ -11,7 +11,7 @@
 
     <dd class="portletItem odd">
         <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
-        <script tal:content="view/getScriptProfile"></script>
+        <script tal:content="view/getScriptSearch"></script>
     </dd>
 
 <!--

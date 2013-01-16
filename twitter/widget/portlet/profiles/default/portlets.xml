@@ -5,8 +5,14 @@
 
  <portlet
    addview="twitter.widget.portlet.twitterWidgetPortlet"
-   title="Twitter Widget Portlet"
-   description="Twitter Widget Based Portlet"
+   title="Twitter Widget Portlet Profile"
+   description="Twitter Profile Widget Based Portlet"
+   />
+
+ <portlet
+   addview="twitter.widget.portlet.twitterWidgetPortletSearch"
+   title="Twitter Widget Portlet Search"
+   description="Twitter Search Widget Based Portlet"
    />
 
 </portlets>

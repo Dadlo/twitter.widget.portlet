@@ -1,7 +1,12 @@
 Changelog
 =========
 
-0.1dev (unreleased)
--------------------
+0.2 (16.01.2013)
+----------------
+
+- Separated into two Twitter portlets
+
+0.1 (01.12.2012)
+----------------
 
 - Initial release
